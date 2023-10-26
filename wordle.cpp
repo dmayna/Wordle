@@ -26,19 +26,26 @@ void print_word(string guess, int wordsize, int status[]);
 
 int main(int argc, char * argv[])
 {
+    int wordsize = 5;
     // ensure proper usage
     if (argc != 2)
     {
         cout << "Usage: ./wordle wordsize\n";
-        return 1;
+        cout << "Deafaulting to 5 letter word\n\n";
     }
-
-    int wordsize = 0;
-
-    int inputsize = atoi(argv[1]);
-    if (inputsize >= 5 && inputsize <= 8)
+    else
     {
-        wordsize = inputsize;
+        int inputsize = atoi(argv[1]);
+        if (inputsize >= 5 && inputsize <= 8)
+        {
+            wordsize = inputsize;
+        }
+        else
+        {
+            cout << "Usage: ./wordle wordsize\n";
+            cout << "wordsize must be >=5 and <= 8\n";
+            cout << "Deafaulting to 5 letter word\n\n";
+        }
     }
 
     // open correct file, each file has exactly LISTSIZE words
@@ -52,14 +59,9 @@ int main(int argc, char * argv[])
         return 1;
     }
 
-    // load word file into an array of size LISTSIZE
-   //char options[LISTSIZE][wordsize + 1];
-    vector<string> options;
+    // load word file into a vector
+    vector<string> options(LISTSIZE);
 
-    for (int i = 0; i < LISTSIZE; i++)
-    {
-        
-    }
     if (wordlist.is_open())
     {
         while (wordlist)
@@ -80,7 +82,7 @@ int main(int argc, char * argv[])
 
     // print greeting, using ANSI color codes to demonstrate
     cout << GREEN "This is WORDLE" RESET "\n";
-    cout << "You have " << guesses << "tries to guess the " << wordsize <<"-letter word I'm thinking of\n";
+    cout << "You have " << guesses << " tries to guess the " << wordsize <<"-letter word I'm thinking of\n";
 
     // main game loop, one iteration for each guess
     for (int i = 0; i < guesses; i++)
@@ -165,7 +167,6 @@ int check_word(string guess, int wordsize, int status[], string choice)
             }
         }
     }
-
     return score;
 }
 
@@ -175,18 +176,17 @@ void print_word(string guess, int wordsize, int status[])
     {
         if (status[i] == EXACT)
         {
-            cout << GREEN  << guess[i] << RESET "\n";
+            cout << GREEN  << guess[i] << RESET " ";
         }
         else if (status[i] == CLOSE)
         {
-            cout << YELLOW  << guess[i] << RESET "\n";
+            cout << YELLOW  << guess[i] << RESET " ";
         }
         else
         {
-            cout << RED  << guess[i] << RESET "\n";
+            cout << RED  << guess[i] << RESET " ";
         }
     }
-
     printf(RESET "\n");
     return;
 }
